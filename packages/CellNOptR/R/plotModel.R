@@ -15,7 +15,7 @@
 # $Id$
 plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
     signals=NULL, stimuli=NULL, inhibitors=NULL, NCNO=NULL, compressed=NULL,
-    output="STDOUT", filename=NULL,graphvizParams=list(), show=TRUE, remove_dot=TRUE){
+    output="STDOUT", filename=NULL,graphvizParams=list(), show=TRUE, remove_dot=TRUE,edgeLabel=c("none","confScore")){
 # Quick example:
 # ---------------
 #   filename = "ToyPKNMMB.sif"
@@ -73,6 +73,14 @@ plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
         graphvizParams$andHeight = 0.5
     }
   }
+	
+	edgeLabel = match.arg(edgeLabel,c("none","confScore"))
+	if(edgeLabel=="none"){
+		edgeLabels = NA
+	}
+	if(edgeLabel=="confScore"){
+		edgeLabels = as.character(model$confScores)
+	}
 
     # Some required library to build the graph and plot the results using
     # graphviz.
@@ -255,7 +263,7 @@ plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
 
     res = createEdgeAttrs(v1, v2, edges, BStimes, Integr,
         user_edgecolor=graphvizParams$edgecolor,
-        view_empty_edge=graphvizParams$viewEmptyEdges)
+        view_empty_edge=graphvizParams$viewEmptyEdges,edgeLabels = edgeLabels)
     # an alias
     edgeAttrs = res$edgeAttrs
 
@@ -639,7 +647,7 @@ compressed, graphvizParams){
 # Create the node attributes and save in a list to be used either by the
 # plot function of the edgeRenderInfo function.
 createEdgeAttrs <- function(v1, v2, edges, BStimes ,Integr, user_edgecolor,
-    view_empty_edge=TRUE){
+    view_empty_edge=TRUE,edgeLabels=NA){
 
     edgewidth_c = 3 # default edge width
 
@@ -655,7 +663,12 @@ createEdgeAttrs <- function(v1, v2, edges, BStimes ,Integr, user_edgecolor,
     for (i in 1:length(edges)){
         edgename = paste(v1[i], "~", v2[i], sep="")
         edgewidth[edgename] = edgewidth_c    # default edgewidth
-        label[edgename] = ""                 # no label on the edge by default
+        if(is.na(edgeLabels)){
+        	label[edgename] = ""                 # no label on the edge by default
+        }else{
+        	label[edgename] = as.character(edgeLabels[[i]])
+        }
+        
         lty[edgename] = "solid"
         edgecolor[edgename] = "black"        # set a default (useless but safe)
 
