@@ -16,7 +16,7 @@
 # $Id$
 readSIF<-function(sifFile){
 
-    # Read the sif file expected 3 columns all over the file
+    # Read the sif file expected 3 columns all over the file 
     status = tryCatch({
             sif<-read.table(sifFile)
             sif<-as.matrix(sif)
@@ -48,7 +48,7 @@ readSIF<-function(sifFile){
         }
         sif = matrix(sif, ncol=3, byrow=TRUE)
     }
-
+    
     #Create the vector of names of species
     namesSpecies<-unique(c(as.character(sif[,1]), as.character(sif[,3])))
 
@@ -94,6 +94,13 @@ readSIF<-function(sifFile){
 
         }
 
+#Create the vector of confidence scores
+    if(dim(sif)[[2]]>3){
+    	confScores = as.numeric(sif[,4])
+    }else  confScores = rep(0.5,length(reacID))
+    
+    if (any(confScores>1) || any(confScores<0))
+    	stop("confidence scores, 4th column of the sif, must lie in [0-1]")
 #Take care of the "and" nodes
 
 #1.detect them
@@ -118,6 +125,9 @@ readSIF<-function(sifFile){
             newReac<-rowSums(interMat[,AndsReacs])
             newReacNot<-rowSums(notMat[,AndsReacs])
 
+            if(length(unique(confScores[AndsReacs]))>1)
+            	stop(paste("gate",node, "has inconsistent confidence scores"))
+            newConfScore = confScores[AndsReacs[[1]]]  # all should be identical, take first
 #5.create the new reacID
 
             #First case: I have an "and" with two inputs only
@@ -135,7 +145,7 @@ readSIF<-function(sifFile){
                 newReacID<-paste(inputs,output,sep="")
                 newReacID<-sub(pattern=paste("\\W{1}",output,sep=""),
                     x=newReacID,replacement=output,ignore.case=FALSE,perl=TRUE)
-
+                
                 }else{
 
             #Second case: I have an 'and' with more than 2 inputs
@@ -191,12 +201,14 @@ readSIF<-function(sifFile){
 #6. remove the old reactions and replace them by the new ones
             namesSpecies<-namesSpecies[-which(namesSpecies == AndNodesV[i])]
             reacID<-reacID[-AndsReacs]
+            confScores<-confScores[-AndsReacs]
             interMat<-interMat[,-AndsReacs]
             notMat<-notMat[,-AndsReacs]
             interMat<-cbind(interMat,newReac)
             notMat<-cbind(notMat,newReacNot)
 
             reacID<-c(reacID,newReacID)
+            confScores<-c(confScores,newConfScore)
             interMat<- as.matrix(interMat[-which(rownames(interMat) == AndNodesV[i]),], drop=F)
             notMat <- as.matrix(notMat[-which(rownames(notMat) == AndNodesV[i]),], drop=F)
 
@@ -214,9 +226,10 @@ readSIF<-function(sifFile){
                 }
             }
         }
-
+    
     model<-list(
         reacID=reacID,
+        confScores=confScores,
         namesSpecies=namesSpecies,
         interMat=interMat,
         notMat=notMat)
