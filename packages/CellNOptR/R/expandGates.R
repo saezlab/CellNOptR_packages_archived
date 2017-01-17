@@ -28,6 +28,11 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
             stop("This function expects as input a Model as output by readSIF")
         }
     }
+    if(length(Model) == 6) {
+    	if(all(names(Model) != c("reacID","confScores" ,"namesSpecies","interMat","notMat","speciesCompressed"))) {
+    		stop("This function expects as input a Model as output by readSIF")
+    	}
+    }
 
     SplitANDs <- list(initialReac=c("split1","split2"))
     splitR <- 1
@@ -53,7 +58,7 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
             }
         }
     }
-
+	# TODO: handle here confScores
     for(r in 1:initialReacN) {
         inNodes <- which(Model$interMat[,r] == -1)
         if(length(inNodes) > 1) {
@@ -68,11 +73,13 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
                 newReacsNots <- matrix(data=0,nrow=dim(Model$interMat)[1],ncol=length(inNodes))
                 newReacs[outNode,] <- 1
                 newReacsIDs <- rep("a",length(inNodes))
+                #newConfScores <- rep(NA,length(inNodes))
                 for(i in 1:length(inNodes)) {
                     newReacs[inNodes[i],i] <- -1
                     newReacsNots[inNodes[i],i] <- Model$notMat[inNodes[i],r]
                     newReacsIDs[i] <- paste(Model$namesSpecies[inNodes[i]],"=",Model$namesSpecies[outNode],sep="")
                     if(Model$notMat[inNodes[i],r] == 1) newReacsIDs[i] <- paste("!",newReacsIDs[i],sep="")
+                    #newConfScores[i] = Model$confScores[[i]]
                 }
                 colnames(newReacs) <- newReacsIDs
                 colnames(newReacsNots) <- newReacsIDs
@@ -82,6 +89,7 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
                 Model$notMat <- cbind(Model$notMat,newReacsNots)
                 Model$interMat <- cbind(Model$interMat,newReacs)
                 Model$reacID <- c(Model$reacID,newReacsIDs)
+                #Model$confScores <- c(Model$confScores,newConfScores)
             }
         }
     }
@@ -172,7 +180,11 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
                 if (newcolname %in% colnames(Model$interMat)){
                     next() # skip if exist already
                 }
-                Model$reacID <- c(Model$reacID,newcolname)
+                Model$reacID <- c(Model$reacID,newcolname) 
+                # conf Score: mean of the two option?
+                newConfScore = mean(Model$confScores[inReacsIndex])
+                names(newConfScore) = newcolname
+                Model$confScores <- c(Model$confScores,newConfScore) 
 
                 # fill the interMat (-1 if in lhs, 1 if in rhs)
                 values = as.matrix(rep(0, length(Model$namesSpecies)))

@@ -98,8 +98,11 @@ cutNONC <- function(model, NONCindexes) {
             newNotMat <- newNotMat[,-reac2remove]
             newreacID <- colnames(newInterMat)
 
+            newConfScores = model$confScores[newreacID]
+            
             newModel <- list(
                 reacID=newreacID,
+                confScores=newConfScores,
                 namesSpecies=newSpecies,
                 interMat=newInterMat,
                 notMat=newNotMat
@@ -107,6 +110,7 @@ cutNONC <- function(model, NONCindexes) {
         } else {
             newModel <- list(
                 reacID=colnames(newInterMat),
+                confScores=model$confScores[colnames(newInterMat)],
                 namesSpecies=newSpecies,
                 interMat=newInterMat,
                 notMat=newNotMat)

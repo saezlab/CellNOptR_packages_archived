@@ -29,7 +29,7 @@ compressModel<-function(model, indexes){
 
     speciesCompressed<-0
 
-    for(sp in species){
+for(sp in species){
         # Find all the reacs that come out of species sp
         outReac <- which(Model$interMat[sp,] == -1)
 
@@ -65,7 +65,8 @@ compressModel<-function(model, indexes){
                     newNots = matrix(NA, nrow=dim(Model$notMat)[1], ncol=length(outReac))
                     rownames(newNots) = Model$namesSpecies
                     newReacIDs = rep(NA, length(outReac))
-
+					newConfScores = rep(NA, length(outReac))
+                    
                     for(r in 1:length(outReac)) {
                         newReacs[,r] <- Model$interMat[,inReac] + Model$interMat[,outReac[r]]
                         # TODO: check this?
@@ -95,6 +96,10 @@ compressModel<-function(model, indexes){
                             newReacIDs[r] <- paste(rownames(newReacs)[which(newReacs[,r] == -1)], "=", rownames(newReacs)[which(newReacs[,r] == 1)],sep="")
                             if(any(newNots[,r] == 1)) newReacIDs[r] <- paste("!", newReacIDs[4], sep="")
                         }
+                        
+                        # Compressed edge's confidence score:   mean of originals'
+                        newConfScores[r] = mean(c(Model$confScores[inReac], Model$confScores[outReac][r]))
+                        names(newConfScores)[r] = newReacIDs[r]
 
                     }
 
@@ -105,10 +110,12 @@ compressModel<-function(model, indexes){
                     Model$interMat <- Model$interMat[,-reac2Remove]
                     Model$notMat <- Model$notMat[,-reac2Remove]
                     Model$reacID <- Model$reacID[-reac2Remove]
+                    Model$confScores <- Model$confScores[-reac2Remove]
                     Model$interMat <- cbind(Model$interMat, newReacs)
                     Model$notMat <- cbind(Model$notMat,newNots)
                     Model$reacID <- c(Model$reacID,newReacIDs)
-
+                    Model$confScores <- c(Model$confScores,newConfScores)
+                    
                     if(length(outReac) == 1) {
                         colnames(Model$interMat)[dim(Model$interMat)[2]] <- newReacIDs
                         colnames(Model$notMat)[dim(Model$notMat)[2]] <- newReacIDs
@@ -147,6 +154,8 @@ compressModel<-function(model, indexes){
                         newNots = matrix(NA, nrow=dim(Model$notMat)[1], ncol=length(inReac))
                         rownames(newNots) = Model$namesSpecies
                         newReacIDs = rep(NA, length(inReac))
+                        newConfScores = rep(NA, length(inReac))
+                        
                         if (length(inReac)>0){
                         for(r in 1:length(inReac)) {
                             newReacs[,r] <- Model$interMat[,inReac[r]] + Model$interMat[,outReac]
@@ -179,6 +188,9 @@ compressModel<-function(model, indexes){
                                 newReacIDs[r] <- paste(rownames(newReacs)[which(newReacs[,r] == -1)], "=", rownames(newReacs)[which(newReacs[,r] == 1)],sep="")
                                 if(any(newNots[,r] == 1)) newReacIDs[r] <- paste("!", newReacIDs[4], sep="")
                             }
+                            # Compressed edge's confidence score:   mean of originals'
+                            newConfScores[r] = mean(c(Model$confScores[inReac[r]], Model$confScores[outReac]))
+                            names(newConfScores)[r] = newReacIDs[r]
 
                         }}
 
@@ -188,9 +200,12 @@ compressModel<-function(model, indexes){
                         Model$interMat <- Model$interMat[,-reac2Remove]
                         Model$notMat <- Model$notMat[,-reac2Remove]
                         Model$reacID <- Model$reacID[-reac2Remove]
+                        Model$confScores <- Model$confScores[-reac2Remove]
                         Model$interMat <- cbind(Model$interMat, newReacs)
                         Model$notMat <- cbind(Model$notMat, newNots)
                         Model$reacID <- c(Model$reacID, newReacIDs)
+                        Model$confScores <- c(Model$confScores,newConfScores)
+                        
                         if(length(inReac) == 1) {
                             colnames(Model$interMat)[dim(Model$interMat)[2]] <- newReacIDs
                             colnames(Model$notMat)[dim(Model$notMat)[2]] <- newReacIDs
@@ -227,6 +242,7 @@ compressModel<-function(model, indexes){
 
     if(length(uniqueR) != length(ModelCompressed$reacID)){
         ModelCompressed$reacID<-ModelCompressed$reacID[match(uniqueR,ModelCompressed$reacID)]
+        ModelCompressed$confScores<-ModelCompressed$confScores[match(uniqueR,names(ModelCompressed$confScores))]
         ModelCompressed$interMat<-ModelCompressed$interMat[,match(uniqueR,colnames(ModelCompressed$interMat))]
         ModelCompressed$notMat<-ModelCompressed$notMat[,match(uniqueR,colnames(ModelCompressed$notMat))]
         }
