@@ -79,7 +79,10 @@ plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
 		edgeLabels = NA
 	}
 	if(edgeLabel=="confScore"){
-		edgeLabels = as.character(model$confScores)
+		if(length(model$confScores)==0){
+			cat("\t model$conScores is empty, no confidence score to show.")
+			edgeLabels = NA
+		}else  edgeLabels = as.character(model$confScores)
 	}
 
     # Some required library to build the graph and plot the results using
@@ -222,6 +225,29 @@ plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
             CountAnds<-CountAnds+1
           }
         }
+        
+        edgeLabelsExt = NA
+        if(!is.na(edgeLabels)){
+        	CountReac<-1
+        	CountAnds<-1
+        	edgeLabelsExt<-vector()
+        	for (i in 1:dim(reacs)[1]){
+        		inputs<-unlist(strsplit(reacs[i,1],"+", fixed=TRUE))
+        		if (length(inputs)==1){
+        			edgeLabelsExt[CountReac] = edgeLabels[[i]]
+        			CountReac<-CountReac+1
+        		}else{
+        			for (j in seq_along(inputs)){
+        				edgeLabelsExt[CountReac] = edgeLabels[[i]]
+        				CountReac<-CountReac+1
+        			}
+        			edgeLabelsExt[CountReac] = edgeLabels[[i]]
+        			CountReac<-CountReac+1
+        		}
+        	}
+        }
+        
+        
     }
 
     if (is.null(cnolist) == FALSE){ # if a cnolist is provided, fill
@@ -263,7 +289,7 @@ plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
 
     res = createEdgeAttrs(v1, v2, edges, BStimes, Integr,
         user_edgecolor=graphvizParams$edgecolor,
-        view_empty_edge=graphvizParams$viewEmptyEdges,edgeLabels = edgeLabels)
+        view_empty_edge=graphvizParams$viewEmptyEdges,edgeLabels = edgeLabelsExt)
     # an alias
     edgeAttrs = res$edgeAttrs
 
