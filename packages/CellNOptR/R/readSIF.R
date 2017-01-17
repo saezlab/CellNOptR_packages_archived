@@ -227,6 +227,8 @@ readSIF<-function(sifFile){
             }
         }
     
+    names(confScores)=reacID
+    
     model<-list(
         reacID=reacID,
         confScores=confScores,
