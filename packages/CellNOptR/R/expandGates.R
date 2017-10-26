@@ -13,7 +13,7 @@
 #
 ##############################################################################
 # $Id$
-expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
+expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2,ignoreListByNode=T){
 
     Model = model
     # check that Model is a Model list
@@ -47,10 +47,13 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
 
     # which reactions have ignoreList as output?
     if(!is.na(ignoreList[1])) {
+    	if(ignoreListByNode){
         for(s in 1:initialReacN) {
             if(any(Model$interMat[ignoreList,s] == 1)) {
                 reacs2Ignore = c(reacs2Ignore, s)
             }
+        }}else{
+        	reacs2Ignore = ignoreList
         }
     }
 
@@ -125,10 +128,17 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2){
     getrhs <- function(x) {
         spec2 = strsplit(x, "=")[[1]][2]
     }
-
+#browser()
     # scan all species and build and gates if required
     for(sp in total.list) {
         inReacsIndex <- which(Model$interMat[sp,] == 1)
+        
+        if(ignoreListByNode){
+        	if(sp %in% ignoreList) next; 
+        }else{
+        	inReacsIndex = inReacsIndex[! inReacsIndex %in% ignoreList]
+        }
+        
         if(length(inReacsIndex) > 1) {
             inReacs <- Model$interMat[,inReacsIndex]
             findInput <- function(x) {

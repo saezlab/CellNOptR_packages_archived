@@ -14,7 +14,7 @@
 ##############################################################################
 
 preprocessing<-function(data=NULL, model, cutNONC=TRUE, compression=TRUE,
-    expansion=TRUE, ignoreList=NA, maxInputsPerGate=2,verbose=TRUE){
+    expansion=TRUE, ignoreList=NA, ignoreListByNode=T, maxInputsPerGate=2,verbose=TRUE){
 
     # why not doing this check here ? Does not cost too much
     if (is.null(data)!=TRUE){
@@ -53,7 +53,7 @@ preprocessing<-function(data=NULL, model, cutNONC=TRUE, compression=TRUE,
 
     # Expand the gates
     if (expansion == TRUE){
-        cutModel <- expandGates(model=cutModel, ignoreList=ignoreList,maxInputsPerGate=maxInputsPerGate)
+        cutModel <- expandGates(model=cutModel, ignoreList=ignoreList,maxInputsPerGate=maxInputsPerGate,ignoreListByNode=ignoreListByNode)
     }
 
     # since version 1.3.28 return only model, indices are recomputed in other
