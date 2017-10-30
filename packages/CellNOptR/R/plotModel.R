@@ -407,6 +407,7 @@ plotModel <- function(model, CNOlist=NULL, bString=NULL, indexIntegr=NULL,
 # layout
 create_layout <- function(g, signals, stimuli){
 
+	stimuli = setdiff(stimuli,signals)  # avoid putting the measured signals to the top
     # this algo will tell us the distance between vertices
     # distMatrix columns contains the distance from a vertex to the others
     distMatrix <- floyd.warshall.all.pairs.sp(g)
@@ -548,19 +549,28 @@ compressed, graphvizParams){
         }
     }
 
-    # The stimulis node
-    for (s in stimuli){
-        fillcolor[s] <- "olivedrab3";
-        color[s] <- "olivedrab3";
-        style[s] <- "filled"
-        color[s] <- "black";
-    }
+   
     # The signal nodes
     for (s in signals){ #must be before the inhibitors to allow bicolors
         fillcolor[s] <- "lightblue";
         color[s] <-"lightblue";
         color[s] <- "black";
     }
+    # The stimulis node, that may also belong to the signal category.
+    for (s in stimuli){
+    	if (length(grep(s, signals))>=1){
+    		#fillcolor[s] <- "olivedrab3";
+    		shape[s]="ellipse"
+    		style[s] <- "filled,bold"
+    		color[s] <-"olivedrab3"
+    	}else{
+    		fillcolor[s] <- "olivedrab3";
+    		color[s] <- "olivedrab3";
+    		style[s] <- "filled"
+    		color[s] <- "black";
+    	}
+    }
+    
     # The inhibitor node, that may also belong to the signal category.
     for (s in inhibitors){
         if (length(grep(s, signals))>=1){

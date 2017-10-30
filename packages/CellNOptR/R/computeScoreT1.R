@@ -17,7 +17,7 @@
 #Function that computes the score of a specific bitstring
 # todo: this is similar to wha is done in gaBinaryT1. need to do the same for T2
 computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL, 
-    sizeFac=0.0001, NAFac=1, timeIndex=2){
+    sizeFac=0.0001, NAFac=1, timeIndex=2,verbose=F){
     # simList and indexList are computed inside this function. 
     # However, for back-compatibility, we keep the arguments so that if
     # provided, we can still use them.
@@ -81,7 +81,7 @@ computeScoreT1<-function(CNOlist, model, bString, simList=NULL, indexList=NULL,
 		nCond, nReacs, nSpecies, nSignals, nMaxInputs,
         finalCube, ixNeg, ignoreCube, maxIx,
         indexSignals, indexStimuli, indexInhibitors, valueInhibitors,
-        valueStimuli, as.integer(1))
+        valueStimuli, as.integer(1),as.integer(verbose))
 
     simResultsT0 = .Call("simulatorT1", nStimuli, nInhibitors,
         nCond, nReacs, nSpecies, nSignals, nMaxInputs,

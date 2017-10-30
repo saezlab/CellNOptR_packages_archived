@@ -128,9 +128,10 @@ expandGates<-function(model, ignoreList=NA,maxInputsPerGate=2,ignoreListByNode=T
     getrhs <- function(x) {
         spec2 = strsplit(x, "=")[[1]][2]
     }
-#browser()
+
     # scan all species and build and gates if required
     for(sp in total.list) {
+    	
         inReacsIndex <- which(Model$interMat[sp,] == 1)
         
         if(ignoreListByNode){
