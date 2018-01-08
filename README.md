@@ -1,9 +1,12 @@
-CellNOptR
-=========
+# IMPORTANT!
 
-Training of boolean logic models of signalling networks using prior knowledge networks and perturbation data.
+From January, 2018 the packages are moved to individual repositories, please visit the packages following the links below:
 
-- Please visit [CellNOptR](https://saezlab.github.io/CellNOptR/) for details about the project (references, news, ...)
-- Installation:
-     [Installation](https://github.com/cellnopt/CellNOptR/tree/master/doc)
-- See also examples within the [Notebooks](http://nbviewer.ipython.org/github/cellnopt/CellNOptR/tree/master/notebooks/)
+* CellNOptR: [https://github.com/saezlab/CellNOptR](https://github.com/saezlab/CellNOptR)
+* CNORfuzzy: [https://github.com/saezlab/CNORfuzzy](https://github.com/saezlab/CNORfuzzy)
+* CNORfeeder:
+* CNORdt:
+* CNORode: [https://github.com/saezlab/CNORode2017](https://github.com/saezlab/CNORode2017)
+
+These changes help us maintaining the synchronisation between the Github and Bioconductor versions. Thanks for your understanding. 
+
