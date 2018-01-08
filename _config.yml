@@ -22,7 +22,7 @@ url:              https://saezlab.github.io
 baseurl:          /CellNOptR/
 #baseurl:           /CellNOptR
 #site.baseurl:           /CellNOptR
-toollogo:         /CellNOptR/tool_logo.png
+toollogo:         https://saezlab.github.io/CellNOptR/tool_logo.png
 
 author:
   name:           'Enio Gjerga'
