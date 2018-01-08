@@ -7,10 +7,6 @@ title: Home
 
 # CellNOpt
 
-site.baseurl: {{ site.baseurl }}
-site.url: {{ site.url }}
-
-
 
 ## Overview
 **CellNOpt** (from CellNetOptimizer; a.k.a. CNO) is a software used for creating logic-based models of signal transduction networks using different logic formalisms (Boolean, Fuzzy, or differential equations). CellNOpt uses information on signaling pathways encoded as a Prior Knowledge Network, and trains it against high-throughput biochemical data to create cell-specific models.
@@ -56,7 +52,7 @@ A series of packages are available in R. The core CellNOpt is available on BioCo
 
 [CNORfeeder](http://www.bioconductor.org/packages/release/bioc/html/CNORfeeder.html) is an add-on to CellNOptR that permits to extend a network derived from literature with links derived in a strictly data-driven way and supported by protein-protein interactions as described in (Eduati et al Bioinformatics 2012).
 
-<img src="/cellnopt/public/indexImpl.png" alt="Example Implementations">
+<img src="https://saezlab.github.io/CellNOptR_packages_archived/public/indexImpl.png" alt="Example Implementations">
 
 
 ### _MATLAB_
