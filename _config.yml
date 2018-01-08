@@ -3,7 +3,6 @@ gems:             ['jekyll-paginate', 'jekyll-gist', 'jekyll-github-metadata']
 
   
 # Dependencies
-# highlighter:      rouge
 markdown: kramdown
 kramdown:
   input: GFM
@@ -17,15 +16,11 @@ title:            CellNOpt
 tagline:          CellNOpt Documentation
 description:      "Identification of signaling models based on perturbation data and prior knowledge"
 url:              https://saezlab.github.io
-#url:               
-#site.url:          https://saezlab.github.io
-baseurl:          /CellNOptR/
-#baseurl:           /CellNOptR
-#site.baseurl:           /CellNOptR
-toollogo:         https://saezlab.github.io/CellNOptR/tool_logo.png
+baseurl:          /CellNOptR_packages_archived/
+toollogo:         https://saezlab.github.io/CellNOptR_packages_archived/tool_logo.png
 
 author:
-  name:           'Enio Gjerga'
+  name:           'Enio Gjerga and Attila Gabor'
 
 paginate:         5
 
@@ -33,4 +28,4 @@ paginate:         5
 version:          1.4.0
 
 github:
-  repo:           https://github.com/saezlab/CellNOptR
+  repo:           https://github.com/saezlab/CellNOptR_packages_archived
