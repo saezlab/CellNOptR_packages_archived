@@ -7,6 +7,9 @@ title: Home
 
 # CellNOpt
 
+site.baseurl: {{ site.baseurl }}
+
+
 ## Overview
 **CellNOpt** (from CellNetOptimizer; a.k.a. CNO) is a software used for creating logic-based models of signal transduction networks using different logic formalisms (Boolean, Fuzzy, or differential equations). CellNOpt uses information on signaling pathways encoded as a Prior Knowledge Network, and trains it against high-throughput biochemical data to create cell-specific models.
 
