@@ -8,6 +8,8 @@ title: Home
 # CellNOpt
 
 site.baseurl: {{ site.baseurl }}
+site.url: {{ site.url }}
+url: {{ url }}
 
 
 ## Overview
