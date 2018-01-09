@@ -10,3 +10,4 @@ From January, 2018 the packages are moved to individual repositories, please vis
 
 These changes help us maintaining the synchronisation between the Github and Bioconductor versions. Thanks for your understanding. 
 
+For a detailed **documentation** and for tutorials please visit the tools [website](https://saezlab.github.io/CellNOptR).
